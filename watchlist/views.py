@@ -9,3 +9,13 @@ def movie_list(request):
         'all movies': list(movies.values())
     }
     return JsonResponse(data)
+
+
+def particular_movie(request, id):
+    movie = Movie.objects.get(pk=id)
+    data = {
+        'name': movie.name,
+        'description': movie.description,
+        'active': movie.active
+    }
+    return JsonResponse(data)
