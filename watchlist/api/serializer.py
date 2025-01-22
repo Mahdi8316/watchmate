@@ -18,3 +18,9 @@ class MovieSerializers(serializers.Serializer):
         instance.active = validated_data.get('active', instance.active)
         instance.save()
         return instance
+
+    def validate_name(self, value):  # field validation
+        if len(value) < 5:
+            return serializers.ValidationError("The name is too short")
+        else:
+            return value
