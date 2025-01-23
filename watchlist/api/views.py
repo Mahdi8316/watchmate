@@ -30,11 +30,11 @@ class WatchList(APIView):
             movie = WatchList.objects.all()
         except WatchList.notFound:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        data = WatchListSerializers(movie, many=True)
+        data = WatchListSerializer(movie, many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = WatchListSerializers(data=request.data)
+        serializer = WatchListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -45,12 +45,12 @@ class WatchList(APIView):
 class particularWatch(APIView):
     def get(self, request, id):
         movie = WatchList.objects.get(pk=id)
-        data = WatchListSerializers(movie)
+        data = WatchListSerializer(movie)
         return Response(data.data, status=status.HTTP_200_OK)
 
     def put(self, request, id):
         movie = WatchList.objects.get(pk=id)
-        serializer = WatchListSerializers(movie, data=request.data)
+        serializer = WatchListSerializer(movie, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
