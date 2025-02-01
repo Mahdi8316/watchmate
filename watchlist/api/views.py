@@ -24,6 +24,27 @@ class StreamPlatformListAV(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class StreamPlatformDetailAV(APIView):
+    def get(self, request, id):
+        platform = StreamPlatform.objects.get(pk=id)
+        data = StreamPlatformSerializer(platform)
+        return Response(data.data, status=status.HTTP_200_OK)
+
+    def put(self, request, id):
+        platform = StreamPlatform.objects.get(pk=id)
+        serializer = StreamPlatformSerializer(platform, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        platform = StreamPlatform.objects.get(pk=id)
+        platform.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class WatchList(APIView):
     def get(self, request):
         try:
