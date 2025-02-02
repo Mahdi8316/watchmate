@@ -46,7 +46,7 @@ class StreamPlatformDetailAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class WatchList(APIView):
+class WatchListAV(APIView):
     def get(self, request):
         try:
             movie = WatchList.objects.all()
