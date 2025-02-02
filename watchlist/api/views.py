@@ -17,8 +17,14 @@ class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
 
 
 class ReviewList(generics.ListCreateAPIView):
-    queryset = Review.objects.all()
+    # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)
+
+
 # class ReviewList(mixins.ListModelMixin,
 #                  mixins.CreateModelMixin,
 #                  generics.GenericAPIView
