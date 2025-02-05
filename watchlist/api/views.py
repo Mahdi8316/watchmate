@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework.permissions import IsAuthenticated
 
 
 class ReviewDetail(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
@@ -37,6 +38,7 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         pk = self.kwargs['pk']
