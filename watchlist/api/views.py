@@ -8,11 +8,13 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
+from watchlist.api.permission import AdminOrReadOnly, ReviewUserOrReadOnly
 
 
 class ReviewDetail(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [ReviewUserOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
