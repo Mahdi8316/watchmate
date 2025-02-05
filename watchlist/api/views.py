@@ -2,18 +2,36 @@ from watchlist.models import WatchList, StreamPlatform, Review
 from rest_framework.response import Response
 from watchlist.api.serializer import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
 
 
-class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+class ReviewDetail(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def retrieve(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+class ReviewCreate(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        watchlist = WatchList.objects.get(pk=pk)
+        user = self.request.user
+        review_queryset = Review.objects.filter(watchlist=watchlist, user=user)
+        if review_queryset.exists():
+            raise ValidationError("you have already reviewed this.")
+        serializer.save(watchlist=watchlist, user=user)
 
 
 class ReviewList(generics.ListCreateAPIView):
