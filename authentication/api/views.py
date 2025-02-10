@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from authentication.api.serializer import RegSerializer
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-
+from rest_framework import status
 from authentication import models
 
 
@@ -21,3 +21,10 @@ def reg_view(request):
             data = serializer.errors
 
         return Response(data)
+
+
+@api_view(['POST',])
+def logout_view(request):
+    if request.method == 'POST':
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
